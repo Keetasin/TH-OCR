@@ -1,13 +1,18 @@
-# Ignore Python cache files
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 
-# Ignore environment folders
+# Environment files
+.env/
 venv/
-env/
 
-# Ignore logs and temp files
+# Logs
 *.log
-*.tmp
 
+# Jupyter Notebook
+.ipynb_checkpoints
 
+# OS generated files
+.DS_Store
+Thumbs.db
