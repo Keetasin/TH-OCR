@@ -1,0 +1,7 @@
+Pillow
+pytesseract
+matplotlib
+numpy
+pandas
+pythainlp
+ssg
