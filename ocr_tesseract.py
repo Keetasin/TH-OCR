@@ -71,7 +71,7 @@ if __name__ == "__main__":
     ]
 
     for t in listfile:
-        img = Image.open(f'document/{t[0]}')
+        img = Image.open(f'dataset/{t[0]}')
         result = pytesseract.image_to_string(img, lang='tha')
 
         char = '\n'
