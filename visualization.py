@@ -70,3 +70,19 @@ print("add_counts:", add_counts)
 print("delete_counts:", delete_counts)
 print("ocr_lengths:", ocr_lengths)
 print("ground_truth_lengths:", ground_truth_lengths)
+
+average = sum(cer_values) / len(cer_values)
+print(f"ค่าเฉลี่ยของ cer_values คือ: {average:.6f}")
+
+std_dev = np.std(cer_values)
+print(f"ส่วนเบี่ยงเบนมาตรฐานของ cer_values คือ: {std_dev:.6f}")
+
+
+
+# # Plot histogram
+# plt.hist(cer_values, bins=10, edgecolor='black')
+# plt.title("Distribution of cer_values")
+# plt.xlabel("Value")
+# plt.ylabel("Frequency")
+# plt.show()
+

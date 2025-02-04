@@ -5,47 +5,41 @@ import numpy as np
 import difflib
 import pandas as pd
 from ssg import syllable_tokenize
+import Levenshtein
 
 def compare_diff(df, easy_wrong: str, answer: str):
+    if easy_wrong not in df.columns or answer not in df.columns:
+        raise ValueError(f"Columns '{easy_wrong}' or '{answer}' not found in DataFrame")
+
     df = df.copy()
     df['add'] = ''
     df['delete'] = ''
-    df['correct word str'] = text
-    df['OCR str'] = ocr
+    df['correct word str'] = df[answer]
+    df['OCR str'] = df[easy_wrong]
     cer_values = []
 
     for index, row in df.iterrows():
-        a = row[easy_wrong]
-        b = row[answer]
+        a = str(row[easy_wrong])  # แปลงเป็น string เผื่อเป็น NaN
+        b = str(row[answer])
 
         add_list = []
         delete_list = []
-        for i, s in enumerate(difflib.ndiff(a, b)):
-            if s[0] == ' ':
-                continue
-            elif s[0] == '-':
+        for s in difflib.ndiff(a, b):
+            if s[0] == '-':
                 delete_list.append(s[-1])
             elif s[0] == '+':
                 add_list.append(s[-1])
 
-        if delete_list:
-            df.loc[index, 'delete'] = "|".join(delete_list)
-        if add_list:
-            df.loc[index, 'add'] = "|".join(add_list)
+        df.loc[index, 'delete'] = "|".join(delete_list) if delete_list else ''
+        df.loc[index, 'add'] = "|".join(add_list) if add_list else ''
 
-        add_text = len(add_list)
-        del_text = len(delete_list)
-
-        # Character Error Rate calculation
-        I = add_text
-        D = del_text
-        S = 0
-        N = ocr
-        CER = (I + D + S) / N if N > 0 else 0
-        cer_values.append(CER)
+        edit_distance = Levenshtein.distance(a, b)
+        N = len(b) if len(b) > 0 else 1  # ป้องกันหารด้วย 0
+        cer_values.append(edit_distance / N)
 
     df['CER Value'] = cer_values
     return df
+
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
